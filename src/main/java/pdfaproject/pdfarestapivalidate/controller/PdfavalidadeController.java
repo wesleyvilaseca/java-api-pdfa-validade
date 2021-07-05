@@ -3,6 +3,8 @@ package pdfaproject.pdfarestapivalidate.controller;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -31,9 +33,11 @@ public class PdfavalidadeController {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
         this.setFilename(basepathroute + dateFormat.format(d) + file.getOriginalFilename());
         try {
-            file.transferTo(new File(this.getFilename()));
+            File pdf = new File(this.getFilename());
+            file.transferTo(pdf);
             JSONObject obj = new JSONObject();
-            obj.put("PDF/A is valid?", isValidPDF(this.getFilename()));
+            obj.put("valid", isValidPDF(this.getFilename()));
+            this.fileDelete(pdf);
             return new ResponseEntity<String>(obj.toString(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -87,6 +91,10 @@ public class PdfavalidadeController {
 
     public String getFilename() {
         return this.filename;
+    }
+
+    public static void fileDelete(File file){
+        file.delete();
     }
 
 }
