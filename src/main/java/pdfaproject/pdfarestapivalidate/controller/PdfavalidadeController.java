@@ -2,9 +2,6 @@ package pdfaproject.pdfarestapivalidate.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -16,6 +13,7 @@ import org.apache.pdfbox.preflight.parser.PreflightParser;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 public class PdfavalidadeController {
     private String filename;
     private String basepathroute = "D:\\JAVA\\PROJECTS\\pdfa-rest-api-validate\\storage\\pdfavalidate\\";
