@@ -11,26 +11,28 @@ import org.apache.pdfbox.preflight.PreflightDocument;
 import org.apache.pdfbox.preflight.ValidationResult;
 import org.apache.pdfbox.preflight.parser.PreflightParser;
 import org.json.JSONObject;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import pdfaproject.pdfarestapivalidate.support.Filepersist;
+
+
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 public class PdfavalidadeController {
     private String filename;
-    private String basepathroute = "D:\\JAVA\\PROJECTS\\pdfa-rest-api-validate\\storage\\pdfavalidate\\";
+    private ApplicationHome home = new ApplicationHome(Filepersist.class);
 
     @PostMapping(path = "/api/pdfavalidate/")
-    public @ResponseBody ResponseEntity<String> extractTextFromPDFFile(@RequestParam("file") MultipartFile file) {
+    public @ResponseBody ResponseEntity<String> get(@RequestParam("file") MultipartFile file) {
         Date d = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss") ;
-        this.setFilename(basepathroute + dateFormat.format(d) + file.getOriginalFilename());
+        this.setFilename(home.getDir() + "\\" + dateFormat.format(d) + file.getOriginalFilename());
         try {
             File pdf = new File(this.getFilename());
             file.transferTo(pdf);
@@ -63,12 +65,6 @@ public class PdfavalidadeController {
 
     }
 
-    /**
-     * Return true if file is a valid PDF/A-1b file
-     * 
-     * @param fileName
-     * @return
-     */
     public static boolean isValidPDF(String fileName) {
         Optional<ValidationResult> validationResult = getValidationResult(fileName);
 
@@ -92,7 +88,7 @@ public class PdfavalidadeController {
         return this.filename;
     }
 
-    public static void fileDelete(File file){
+    public void fileDelete(File file){
         file.delete();
     }
 
